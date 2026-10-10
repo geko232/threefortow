@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Растём вместе</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--h:335;--bg:hsl(var(--h) 55% 95%);--card:#fff;--ink:hsl(var(--h) 30% 16%);--mut:hsl(var(--h) 12% 40%);--acc:hsl(var(--h) 52% 40%);--on:#fff;--soft:hsl(var(--h) 60% 91%);--line:hsl(var(--h) 35% 86%);--sky1:hsl(var(--h) 75% 90%);--sky2:hsl(var(--h) 60% 96%);--grass:hsl(135 38% 70%);--sun:#f2b83b;--bad:#b4472f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:hsl(var(--h) 22% 10%);--card:hsl(var(--h) 20% 15%);--ink:hsl(var(--h) 30% 92%);--mut:hsl(var(--h) 14% 68%);--acc:hsl(var(--h) 65% 72%);--on:hsl(var(--h) 40% 12%);--soft:hsl(var(--h) 25% 22%);--line:hsl(var(--h) 20% 26%);--sky1:hsl(var(--h) 32% 22%);--sky2:hsl(var(--h) 25% 14%);--grass:hsl(135 28% 24%);--bad:#ee8a70}}
+:root[data-theme="dark"]{--bg:hsl(var(--h) 22% 10%);--card:hsl(var(--h) 20% 15%);--ink:hsl(var(--h) 30% 92%);--mut:hsl(var(--h) 14% 68%);--acc:hsl(var(--h) 65% 72%);--on:hsl(var(--h) 40% 12%);--soft:hsl(var(--h) 25% 22%);--line:hsl(var(--h) 20% 26%);--sky1:hsl(var(--h) 32% 22%);--sky2:hsl(var(--h) 25% 14%);--grass:hsl(135 28% 24%);--bad:#ee8a70}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 "Rubik",system-ui,-apple-system,"Segoe UI",sans-serif;transition:background .4s}
+.app{max-width:430px;margin:0 auto;padding:20px 16px 36px}
+h1{font-size:28px;line-height:1.15;margin:8px 0 6px;font-weight:600}
+.lead{color:var(--mut);margin:0 0 20px}
+.mut{color:var(--mut);font-size:14px}
+label{display:block;font-size:14px;color:var(--mut);margin:0 0 4px 4px}
+input{width:100%;padding:14px 16px;border-radius:16px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:17px}
+input:focus{outline:3px solid var(--acc);outline-offset:1px}
+.names,.plants,.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.names{margin-bottom:18px}
+.plants{margin:6px 0 16px}
+.plant{background:var(--card);border:2px solid var(--line);border-radius:24px;padding:10px 8px 12px;color:var(--ink);font:inherit;cursor:pointer;transition:transform .15s,border-color .15s}
+.plant svg{width:92px;height:101px;display:block;margin:0 auto 4px}
+.plant.on{border-color:var(--acc);background:var(--soft);transform:translateY(-2px)}
+.roles{background:var(--card);border-radius:18px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:18px;font-size:15px}
+.link{background:none;border:0;color:var(--acc);font:inherit;font-weight:500;cursor:pointer;padding:6px}
+.btn{width:100%;padding:16px;border-radius:18px;border:0;background:var(--acc);color:var(--on);font:inherit;font-size:17px;font-weight:500;cursor:pointer}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.alt{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.sun{background:var(--sun);color:#2a2000}
+button:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.top h1{font-size:22px;margin:0}
+.chip{background:var(--card);border-radius:99px;padding:6px 14px;font-weight:500;white-space:nowrap}
+.scene{position:relative;overflow:hidden;margin-top:14px;border-radius:32px;padding:22px 0 0;background:linear-gradient(180deg,var(--sky1),var(--sky2))}
+.scene::before{content:"";position:absolute;inset:0;opacity:0;transition:opacity .8s;background:radial-gradient(1.5px 1.5px at 12% 18%,#fff,transparent),radial-gradient(1.5px 1.5px at 30% 8%,#fff,transparent),radial-gradient(2px 2px at 55% 20%,#fff,transparent),radial-gradient(1.5px 1.5px at 72% 10%,#fff,transparent),radial-gradient(2px 2px at 88% 26%,#fff,transparent),radial-gradient(1.5px 1.5px at 20% 38%,#fff,transparent),radial-gradient(1.5px 1.5px at 80% 44%,#fff,transparent)}
+.scene.night::before{opacity:.9}
+.orb{position:absolute;width:42px;height:42px;border-radius:50%;transform:translate(-50%,-50%);transition:left .8s,top .8s,background .6s,box-shadow .6s}
+.orb.sun{background:var(--sun);box-shadow:0 0 0 10px color-mix(in srgb,var(--sun) 28%,transparent),0 0 40px 14px color-mix(in srgb,var(--sun) 35%,transparent)}
+.orb.moon{background:radial-gradient(circle at 38% 38%,#fffdf0,#e6dfc0);box-shadow:0 0 0 8px rgb(255 250 220 / .12),0 0 36px 10px rgb(255 250 220 / .25)}
+.scene::after{content:"";position:absolute;left:-15%;right:-15%;bottom:-78px;height:150px;border-radius:50%;background:var(--grass)}
+#art{position:relative;z-index:1;width:min(290px,76%);margin:0 auto;transition:transform .4s}
+#art svg{display:block;width:100%;height:auto}
+#art.dead{filter:grayscale(.9) sepia(.3) brightness(.92);transform:rotate(-3deg) translateY(4px);transform-origin:50% 90%}
+.pop{animation:pop .4s}
+@keyframes pop{50%{transform:scale(1.06)}}
+.fx{position:absolute;z-index:2;left:0;right:0;top:14%;height:55%;display:flex;justify-content:center;gap:16px;pointer-events:none}
+.fx i{width:8px;height:12px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:#4fa3f0;opacity:0}
+.fx.gold i{background:var(--sun);border-radius:50%;width:9px;height:9px}
+.fx.go i{animation:drop .9s ease-in forwards}
+.fx i:nth-child(2){animation-delay:.1s}.fx i:nth-child(3){animation-delay:.2s}.fx i:nth-child(4){animation-delay:.3s}
+@keyframes drop{0%{transform:translateY(-20px);opacity:0}20%{opacity:1}100%{transform:translateY(120px);opacity:0}}
+.cap{text-align:center;padding:16px 8px 4px}
+.stage{font-size:22px;font-weight:600;line-height:1.2}
+.bar{height:10px;border-radius:9px;background:var(--line);overflow:hidden;margin:12px 16px 6px}
+.bar i{display:block;height:100%;background:var(--acc);border-radius:9px;transition:width .5s}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--soft);border-radius:16px;padding:4px;margin:14px 0 10px}
+.seg button{padding:10px;border:0;border-radius:12px;background:transparent;color:var(--mut);font:inherit;font-weight:500;cursor:pointer}
+.seg button.on{background:var(--card);color:var(--ink)}
+.mem{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:18px;padding:12px 14px;margin-bottom:8px}
+.av{width:42px;height:42px;border-radius:50%;background:var(--acc);color:var(--on);display:grid;place-items:center;font-weight:600;font-size:18px;flex:none}
+.mem div{flex:1;min-width:0}
+.mem b{display:block;overflow:hidden;text-overflow:ellipsis}
+.ck{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:15px;font-weight:600;color:var(--on)}
+.ck.on{background:var(--acc);border-color:var(--acc)}
+.gap{height:8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 18px}
+.opt{padding:10px 16px;border-radius:99px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:inherit;cursor:pointer}
+.opt.on{background:var(--acc);border-color:var(--acc);color:var(--on)}
+.big{font-size:34px;font-weight:600;letter-spacing:.06em;margin:6px 0 4px}
+.card .two{margin-top:10px}
+.seat{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:18px;padding:12px 14px;margin-top:8px}
+.seat div{flex:1;min-width:0}.seat b{display:block}
+.seat.wait{border:2px dashed var(--line);background:transparent}
+.seat.wait .av{background:var(--soft);color:var(--mut);animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.45}}
+.card{background:var(--card);border-radius:20px;padding:14px 16px;margin-top:10px}
+.card>b{display:block;font-size:13px;color:var(--mut);font-weight:500}
+.card p{margin:4px 0 0;font-weight:500}
+.nrow{display:flex;gap:8px;margin-top:6px}
+.nrow input{flex:1;min-width:0}
+.nrow .btn{width:auto;padding:0 18px;font-size:15px}
+.note{background:#fff1b8;color:#33290a;border-radius:6px 6px 14px 6px;padding:14px 16px;margin:12px 0 4px;transform:rotate(-1.2deg);box-shadow:0 6px 14px rgb(0 0 0 / .12)}
+.note b{display:block;font-size:13px;opacity:.7;font-weight:500}
+.note p{margin:4px 0 6px;font-size:18px;font-weight:500}
+.note .link{color:#6b4e00;padding-left:0}
+.pin{position:absolute;z-index:3;left:14px;top:16px;background:#fff1b8;color:#33290a;border:0;border-radius:4px 4px 10px 4px;padding:6px 12px;font:inherit;font-size:14px;font-weight:500;cursor:pointer;transform:rotate(-5deg);box-shadow:0 3px 8px rgb(0 0 0 / .18);animation:wob 2.4s ease-in-out infinite}
+@keyframes wob{50%{transform:rotate(2deg)}}
+.chal .two{margin-top:10px}
+.dead-t{color:var(--bad);font-weight:500;text-align:center;margin:12px 0}
+h2{font-size:19px;margin:26px 0 4px;font-weight:600}
+.tl{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.row{display:grid;grid-template-columns:56px 1fr auto;align-items:center;gap:12px;text-align:left;width:100%;background:var(--card);border:2px solid transparent;border-radius:20px;padding:8px 14px 8px 8px;color:var(--ink);font:inherit;cursor:pointer}
+.row.now{border-color:var(--acc)}
+.row.lock{cursor:default}
+.row:disabled{color:var(--ink)}
+.row .th{background:linear-gradient(180deg,var(--sky1),var(--sky2));border-radius:14px;height:56px;overflow:hidden}
+.row .th svg{width:100%;height:100%;display:block}
+.row.lock .th svg{filter:grayscale(1) opacity(.22)}
+.tx b{display:block;font-size:13px;color:var(--mut);font-weight:500}
+.tx span{font-weight:500}
+.row.lock .tx span{color:var(--mut)}
+.tag{font-size:13px;color:var(--mut);white-space:nowrap}
+.row.now .tag{color:var(--acc);font-weight:600}
+.post{margin-top:16px;border-radius:28px;padding:22px 20px;text-align:center;background:var(--acc);color:var(--on)}
+.post .pa{width:130px;margin:0 auto;background:var(--card);border-radius:50%;padding:12px 14px 6px}
+.post .pa svg{display:block;width:100%}
+.post b{display:block;font-size:24px;line-height:1.2;margin:12px 0}
+details{margin-top:24px;color:var(--mut)}
+summary{cursor:pointer;font-size:14px}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.three .btn,.two .btn{padding:12px 6px;font-size:15px}
+.toast{position:fixed;z-index:9;left:16px;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));max-width:398px;margin:auto;background:var(--ink);color:var(--bg);padding:13px 16px;border-radius:16px;opacity:0;pointer-events:none;transition:opacity .25s}
+.toast.show{opacity:1}
+[hidden]{display:none!important}
+select{width:100%;margin-top:6px;padding:12px 10px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:15px}
+.deco,.decoB{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.deco{z-index:2}.decoB{z-index:0}
+.lights{position:absolute;left:0;top:0;width:100%}
+.bulb{animation:tw 1.6s ease-in-out infinite}
+@keyframes tw{50%{opacity:.3}}
+.ff{position:absolute;width:5px;height:5px;border-radius:50%;background:#e9ff7a;box-shadow:0 0 8px 3px rgb(233 255 122 / .6);animation:ff 6s ease-in-out infinite}
+@keyframes ff{0%,100%{transform:translate(0,0);opacity:.3}50%{transform:translate(14px,-18px);opacity:1}}
+.rb{position:absolute;left:5%;right:5%;bottom:14%;height:68%;opacity:.7;background:radial-gradient(ellipse 50% 100% at 50% 100%,transparent 70%,#ff6b6b 71%,#ff6b6b 75%,#ffa94d 75%,#ffa94d 79%,#ffe066 79%,#ffe066 83%,#69db7c 83%,#69db7c 87%,#4dabf7 87%,#4dabf7 91%,#9775fa 91%,#9775fa 94%,transparent 95%)}
+.bf{position:absolute;left:-10%;width:22px;height:18px;animation:fly 15s linear infinite}
+@keyframes fly{50%{transform:translateY(-26px)}to{left:105%;transform:translateY(8px)}}
+.plant{position:relative}
+.plant .lock{position:absolute;top:8px;right:8px;background:var(--sun);color:#2a2000;font-size:12px;font-weight:600;padding:2px 8px;border-radius:99px}
+.plant.off svg{filter:grayscale(.6) opacity(.7)}
+.goods{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.good{background:var(--card);border-radius:20px;padding:10px;display:flex;flex-direction:column;gap:2px}
+.gp{position:relative;overflow:hidden;height:104px;border-radius:14px;margin-bottom:6px;background:linear-gradient(180deg,var(--sky1),var(--sky2));display:grid;place-items:center}
+.gp svg:not(.lights):not(.bf){height:100%;width:auto}
+.good b{font-weight:500}
+.good .btn{margin-top:8px;padding:10px 6px;font-size:15px}
+.good .btn.own{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head>
+<body>
+<div class="app" id="load"><p class="lead">Загрузка…</p></div>
+
+<div class="app" id="err" hidden><h1>Не получилось</h1><p class="lead" id="errT"></p><button class="btn" id="retry">Повторить</button></div>
+
+<div class="app" id="setup" hidden>
+<h1>Растём вместе</h1>
+<p class="lead">Ухаживайте за одним растением каждый день. Если кто-то пропустит, оно завянет.</p>
+<label>Что будете растить</label>
+<div class="plants" id="plants"></div>
+<label>Кого зовёшь</label>
+<div class="chips" id="rel"></div>
+<label for="rgS">Твой город</label>
+<select id="rgS"></select>
+<div class="mut" style="margin:6px 0 18px">Над растением будут солнце и луна по твоему местному времени.</div>
+<button class="btn" id="go">Создать комнату</button>
+</div>
+
+<div class="app" id="lobby" hidden>
+<h1>Комната готова</h1>
+<p class="lead" id="lbLead"></p>
+<div class="card"><b>Код комнаты</b><div class="big" id="code"></div><div class="mut" id="lnk" style="word-break:break-all"></div>
+<div class="two"><button class="btn" id="share">Пригласить</button><button class="btn alt" id="copy">Скопировать</button></div></div>
+<div class="seat"><span class="av" id="av0"></span><div><b id="sn0"></b><span class="mut">В комнате</span></div></div>
+<div class="seat wait"><span class="av">?</span><div><b>Партнёр</b><span class="mut">Ждём, пока примет приглашение</span></div></div>
+<div class="gap"></div><button class="btn alt" id="close0">Закрыть комнату</button>
+</div>
+
+<div class="app" id="join" hidden>
+<h1 id="jT"></h1>
+<p class="lead">Выбери свой город, чтобы небо над растением совпадало с твоим временем.</p>
+<label for="rgJ">Твой город</label>
+<select id="rgJ"></select>
+<div class="gap"></div><div class="gap"></div>
+<button class="btn" id="jGo">Присоединиться</button>
+</div>
+
+<div class="app" id="game" hidden>
+<div class="top"><div><h1 id="title"></h1><div class="mut" id="mode"></div></div><span class="chip" id="streak"></span></div>
+<div class="scene" id="scene"><div class="orb sun" id="orb"></div><button class="pin" id="pin" hidden>Записка</button><div class="fx" id="fx"><i></i><i></i><i></i><i></i></div><div id="art"></div></div>
+<div class="cap">
+<div class="stage" id="stage"></div>
+<div class="mut" id="sub"></div>
+<div class="mut" id="clock"></div>
+<div class="bar"><i id="fill"></i></div>
+<div class="mut" id="next"></div>
+<button class="link" id="curBtn" hidden>Вернуться к сегодняшнему дню</button>
+</div>
+
+<div id="live">
+<div class="mem" id="m0"><span class="av"></span><div><b></b><span class="mut"></span></div><span class="ck"></span></div>
+<div class="mem" id="m1"><span class="av"></span><div><b></b><span class="mut"></span></div><span class="ck"></span></div>
+<div class="note" id="noteIn" hidden><b id="noteFrom"></b><p id="noteTxt"></p><button class="link" id="noteOk">Прочитано</button></div>
+<div class="gap"></div>
+<button class="btn" id="act"></button>
+<div class="gap"></div>
+<button class="btn alt" id="nudge"></button>
+<div class="card chal"><b id="chH"></b><p id="chT"></p><div class="mut" id="chS" style="margin-top:6px"></div>
+<div class="two"><button class="btn" id="chDo"></button><button class="btn alt" id="chNew">Другой вызов</button></div></div>
+<div class="card"><label for="noteOut" id="noteLbl"></label><div class="nrow"><input id="noteOut" maxlength="70" placeholder="Что-нибудь приятное" autocomplete="off"><button class="btn" id="noteSend">Повесить</button></div></div>
+</div>
+
+<div id="gone" hidden>
+<p class="dead-t">Растение завяло: вчера не получилось поухаживать вдвоём.</p>
+<button class="btn sun" id="rev"></button>
+<p class="mut" id="revN" style="text-align:center;margin:8px 0 12px"></p>
+<button class="btn alt" id="restart">Посадить заново</button>
+</div>
+
+<div class="post" id="post" hidden>
+<div class="pa" id="postArt"></div><b id="postT"></b>
+<div class="two"><button class="btn sun" id="pShare">Поделиться</button><button class="btn alt" id="pClose" style="color:inherit;border-color:currentColor">Закрыть</button></div>
+</div>
+
+<h2>Путь растения</h2>
+<div class="mut">Нажми на пройденный этап, чтобы увидеть, как всё было.</div>
+<div class="tl" id="tl"></div>
+
+<details><summary>Настройки</summary>
+<label for="rgG" style="margin-top:10px">Мой город</label>
+<select id="rgG"></select>
+<div class="gap"></div><button class="btn alt" id="leave">Закрыть комнату</button>
+</details>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+const P=[
+{k:'sakura',n:'Сакура',a:'сакуру',h:335,t:['Набухли бутоны','Бутоны розовеют','Первые цветы','Сакура в цвету']},
+{k:'rose',n:'Роза',a:'розу',h:352,t:['Появились бутоны','Бутоны набирают цвет','Раскрылись первые розы','Куст в цвету']},
+{k:'sun',n:'Подсолнух',a:'подсолнух',h:40,t:['Появился бутон','Бутон раскрывается','Цветок тянется к солнцу','Подсолнух в цвету']},
+{k:'apple',n:'Яблоня',a:'яблоню',h:130,t:['Появились бутоны','Бутоны розовеют','Яблоня зацвела','Созрели яблоки']}];
+const TH=[0,1,2,4,6,9,12,16,21,28,36,45];
+const BASE=['Посадили семечко','Семечко набухло','Проклюнулся росток','Раскрылись семядоли','Первые настоящие листья','Росток тянется вверх','Появились веточки','Растение окрепло'];
+
+/* ---------- иллюстрации (SVG) ---------- */
+const svg=g=>`<svg viewBox="0 0 200 220" aria-hidden="true">${g}</svg>`;
+const dot=(x,y,r,c)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${c}"/>`;
+const pet=(n,l,w,c,x,y,r=0)=>{let o='';for(let i=0;i<n;i++)o+=`<ellipse cx="${x}" cy="${y-l*.55}" rx="${w}" ry="${l*.55}" fill="${c}" transform="rotate(${i*360/n+r} ${x} ${y})"/>`;return o};
+const lf=(x,y,a,s,c)=>`<g transform="translate(${x} ${y}) rotate(${a})"><path d="M0 0Q${s*.6} ${-s*.55} ${s*1.7} 0Q${s*.6} ${s*.55} 0 0Z" fill="${c}"/><path d="M0 0Q${s*.6} ${-s*.55} ${s*1.7} 0Z" fill="#fff" opacity=".2"/><path d="M0 0H${s*1.5}" stroke="#fff" stroke-opacity=".4" stroke-width=".9"/></g>`;
+const POT=`<ellipse cx="100" cy="213" rx="50" ry="5" fill="#000" opacity=".12"/><path d="M60 150H140L133 204Q132 211 125 211H75Q68 211 67 204Z" fill="#dcd2c4"/><path d="M118 150H140L133 204Q132 211 125 211H112Z" fill="#c9bba8" opacity=".7"/><path d="M71 158L75 200" stroke="#fff" stroke-opacity=".55" stroke-width="4" stroke-linecap="round"/><path d="M63 172H137" stroke="#c9bba8" stroke-width="3"/><rect x="54" y="141" width="92" height="13" rx="6.5" fill="#ece5d9"/><rect x="54" y="148" width="92" height="6" rx="3" fill="#d9cfbf" opacity=".6"/><ellipse cx="100" cy="144" rx="40" ry="5" fill="#5a4231"/><ellipse cx="88" cy="143" rx="3" ry="1" fill="#7a5a41"/><ellipse cx="112" cy="145" rx="3.5" ry="1" fill="#7a5a41"/>`;
+function flower(k,x,y,r,o){
+ if(o<.45){const c={sakura:'#f4a6c0',rose:'#c2253f',sun:'#8bb23a',apple:'#f3b6c8'}[k],q=r*(.55+o);
+  return `<ellipse cx="${x}" cy="${y}" rx="${q*.4}" ry="${q*.58}" fill="${c}"/><path d="M${x-q*.4} ${y+q*.1}Q${x} ${y+q*1.05} ${x+q*.4} ${y+q*.1}Z" fill="#3f8f4a"/><ellipse cx="${x-q*.13}" cy="${y-q*.2}" rx="${q*.07}" ry="${q*.2}" fill="#fff" opacity=".4"/>`}
+ const R=r*(.55+o*.45);
+ if(k==='sakura')return pet(5,R*1.2,R*.55,'#fbc9da',x,y)+pet(5,R*.85,R*.36,'#f58fb1',x,y,36)+dot(x,y,R*.2,'#f2c14e');
+ if(k==='rose')return dot(x,y,R,'#b81f3a')+dot(x,y,R*.78,'#c9304a')+dot(x,y,R*.55,'#a31a33')+dot(x,y,R*.32,'#c9304a')+`<path d="M${x-R*.5} ${y}Q${x} ${y-R*.8} ${x+R*.5} ${y}M${x-R*.25} ${y+R*.2}Q${x} ${y+R*.5} ${x+R*.25} ${y+R*.2}" stroke="#7d0f23" stroke-width="1.4" fill="none"/><ellipse cx="${x-R*.4}" cy="${y-R*.45}" rx="${R*.12}" ry="${R*.22}" fill="#fff" opacity=".25" transform="rotate(40 ${x-R*.4} ${y-R*.45})"/>`;
+ if(k==='sun'){let d='';for(let i=0;i<7;i++)d+=dot(x+Math.cos(i*.9)*R*.3,y+Math.sin(i*.9)*R*.3,R*.06,'#c28a4b');
+  return pet(16,R*1.3,R*.24,'#f7c92b',x,y)+pet(16,R*1.1,R*.23,'#ee9f0b',x,y,11)+dot(x,y,R*.58,'#6b4423')+dot(x,y,R*.4,'#4a2e15')+d}
+ if(o<.85)return pet(5,R,R*.48,'#fff',x,y)+pet(5,R*.6,R*.3,'#f9d1de',x,y,36)+dot(x,y,R*.2,'#f2c14e');
+ return dot(x,y,r*.78,'#d6342b')+`<circle cx="${x+r*.15}" cy="${y+r*.2}" r="${r*.55}" fill="#a61f19" opacity=".35"/><ellipse cx="${x-r*.3}" cy="${y-r*.3}" rx="${r*.16}" ry="${r*.26}" fill="#fff" opacity=".35" transform="rotate(35 ${x-r*.3} ${y-r*.3})"/><path d="M${x} ${y-r*.7}q1 -${r*.3} ${r*.3} -${r*.5}" stroke="#6b4a2b" stroke-width="2" fill="none"/>`+lf(x+r*.1,y-r*.62,-35,r*.3,'#4f9f46')}
+function art(k,s){
+ const H=[0,0,9,15,24,36,50,64,78,88,95,100][s],by=144,ty=by-H,wd=(k==='sakura'||k==='apple')&&s>=7;
+ const sc=wd?'#7a5a3c':'#4a9650',lc={sakura:'#62b05c',rose:'#3f8f4a',sun:'#4a9a3e',apple:'#52a247'}[k];
+ let g=POT;
+ if(s===0)return svg(g+`<ellipse cx="100" cy="142" rx="7" ry="4.5" fill="#8a5a2e"/><ellipse cx="98" cy="140.5" rx="3" ry="1.5" fill="#b9854a"/>`);
+ if(s===1)return svg(g+`<path d="M80 144Q100 127 120 144Z" fill="#6b4f3a"/><path d="M90 137l6 4 5-7 5 8" stroke="#3f2d20" stroke-width="1.5" fill="none"/><path d="M99 133l1 3" stroke="#d8f0c8" stroke-width="2" stroke-linecap="round"/>`);
+ if(s===2)return svg(g+`<path d="M84 144Q100 134 116 144Z" fill="#6b4f3a"/><path d="M100 143Q99 136 104 132" stroke="#8cc96e" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse cx="106" cy="131" rx="4.5" ry="2.6" fill="#6dbb5e" transform="rotate(-35 106 131)"/><path d="M92 143q3-8 9-5" stroke="#8a5a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>`);
+ const w=2.2+s*.45,sp=`M100 ${by}Q105 ${(by+ty)/2} 100 ${ty}`,bd=Math.min(14+(s-6)*4,28);
+ g+=`<path d="${sp}" stroke="${sc}" stroke-width="${w}" fill="none" stroke-linecap="round"/><path d="${sp}" transform="translate(-.7 0)" stroke="#fff" stroke-opacity=".2" stroke-width="${w*.35}" fill="none" stroke-linecap="round"/>`;
+ if(wd)g+=`<path d="M98.5 ${by-8}v-8M101.5 ${by-24}v-9M98.7 ${by-40}v-7" stroke="#5a4028" stroke-width="1" opacity=".7"/>`;
+ if(s===3)return svg(g+`<ellipse cx="90" cy="${ty+2}" rx="9" ry="5" fill="#8bd07a" transform="rotate(-14 90 ${ty+2})"/><ellipse cx="110" cy="${ty+2}" rx="9" ry="5" fill="#8bd07a" transform="rotate(14 110 ${ty+2})"/>`);
+ if(s<=5){const cy=by-H*.4;g+=`<ellipse cx="91" cy="${cy}" rx="7" ry="3.6" fill="#8bd07a" transform="rotate(-14 91 ${cy})"/><ellipse cx="109" cy="${cy}" rx="7" ry="3.6" fill="#8bd07a" transform="rotate(14 109 ${cy})"/>`}
+ if(s>=6)[[-1,.62,.35],[1,.5,.28]].slice(0,s===6?1:2).forEach(([d,f,b])=>{const x=100+d*bd,y=by-H*f;
+  g+=`<path d="M100 ${by-H*b}Q${100+d*8} ${y+8} ${x} ${y}" stroke="${sc}" stroke-width="${1.4+s*.18}" fill="none" stroke-linecap="round"/>`+lf(x,y,d>0?-30:210,9+s*.4,lc)+lf(100+d*bd*.5,(by-H*b+y)/2+4,d>0?20:160,8,lc)});
+ const np=[0,0,0,0,1,2,3,4,5,5,5,5][s],z=[0,0,0,0,10,12,14,16,17,17,17,17][s]*(k==='sun'?1.4:1);
+ for(let i=0;i<np;i++){const y=by-H*(.3+.66*(np>1?i/(np-1):1)),q=z*(1-.3*i/np);g+=lf(100,y,-28,q,lc)+lf(100,y,208,q,lc)}
+ if(s>=9&&k==='apple'){const f=[.7,.9,1][s-9>2?2:s-9];[[100,ty+16,28],[72,ty+32,22],[128,ty+30,22],[100,ty+40,24]].forEach(c=>g+=dot(c[0],c[1],c[2]*f,lc)+dot(c[0]-c[2]*.2,c[1]-c[2]*.25,c[2]*f*.55,'#6ab55b'))}
+ if(s>=9&&k==='sakura'){const a=[.35,.65,.92][s-9>2?2:s-9];[[100,ty+12,26],[72,ty+30,20],[128,ty+28,20]].forEach(c=>g+=`<circle cx="${c[0]}" cy="${c[1]}" r="${c[2]}" fill="#f9d3e0" opacity="${a}"/><circle cx="${c[0]-5}" cy="${c[1]-6}" r="${c[2]*.55}" fill="#fdeaf1" opacity="${a}"/>`)}
+ let fl=[];const o=[.1,.3,.65,1][s>8?s-8:0],tips=[[100,ty],[100-bd,by-H*.62],[100+bd,by-H*.5]];
+ if(s>=8){
+  if(k==='rose')fl=tips.map((t,i)=>[t[0],t[1],[15,11,12][i]]);
+  if(k==='sakura')fl=s<9?tips.map(t=>[t[0],t[1],11]):[[0,8,12],[-24,18,11],[24,16,11],[-8,32,11],[14,34,11],[-38,36,10],[38,34,10]].map(a=>[100+a[0],ty+a[1],a[2]]);
+  if(k==='sun')fl=[[100,ty,[10,12,24,27][s-8]]];
+  if(k==='apple')fl=s<9?tips.map(t=>[t[0],t[1],10]):[[74,ty+34,11],[126,ty+30,11],[100,ty+22,11],[86,ty+54,10],[116,ty+52,10]];
+ }
+ fl.forEach(f=>g+=flower(k,f[0],f[1],f[2],o));
+ if(s===11){const c={sakura:'#8fc7f0',rose:'#f7c04a',sun:'#7fb3f0',apple:'#f08fb0'}[k];
+  g+=`<g transform="translate(156 74) rotate(-18)"><ellipse cx="-6" cy="-3" rx="7.5" ry="5" fill="${c}"/><ellipse cx="6" cy="-3" rx="7.5" ry="5" fill="${c}"/><ellipse cx="-4.5" cy="4" rx="5" ry="3.8" fill="${c}" opacity=".8"/><ellipse cx="4.5" cy="4" rx="5" ry="3.8" fill="${c}" opacity=".8"/><rect x="-.8" y="-6" width="1.6" height="13" rx=".8" fill="#4a3a30"/></g>`;
+  if(k==='sakura'||k==='rose')[[78,142,-20],[121,143,25],[108,141,70]].forEach(q=>g+=`<ellipse cx="${q[0]}" cy="${q[1]}" rx="3.2" ry="1.7" fill="${k==='rose'?'#c2253f':'#f8b9cf'}" transform="rotate(${q[2]} ${q[0]} ${q[1]})"/>`)}
+ return svg(g)}
+
+const REG=[['Москва','Europe/Moscow'],['Санкт-Петербург','Europe/Moscow'],['Калининград','Europe/Kaliningrad'],['Екатеринбург','Asia/Yekaterinburg'],['Новосибирск','Asia/Novosibirsk'],['Владивосток','Asia/Vladivostok'],['Киев','Europe/Kiev'],['Минск','Europe/Minsk'],['Алматы','Asia/Almaty'],['Ташкент','Asia/Tashkent'],['Баку','Asia/Baku'],['Тбилиси','Asia/Tbilisi'],['Ереван','Asia/Yerevan'],['Стамбул','Europe/Istanbul'],['Дубай','Asia/Dubai'],['Берлин','Europe/Berlin'],['Лондон','Europe/London'],['Нью-Йорк','America/New_York'],['Лос-Анджелес','America/Los_Angeles'],['Бангкок','Asia/Bangkok'],['Токио','Asia/Tokyo']];
+
+// >>> ЕДИНСТВЕННОЕ, ЧТО НУЖНО ПОМЕНЯТЬ: адрес сервера, где запущен bot.py (https, без / на конце)
+const API_URL='https://ВАШ-СЕРВЕР';
+const tg=window.Telegram&&Telegram.WebApp;let BOT='';
+const $=i=>document.getElementById(i);
+const CH=['Отправьте друг другу фото того, что видите прямо сейчас','Напишите друг другу, за что благодарны сегодня','Скиньте друг другу песню под ваше настроение','Расскажите друг другу историю, которую ещё не слышали','Отправьте друг другу самый смешной мем дня','Придумайте растению имя','Решите, чем займётесь на выходных','Скажите друг другу одно тёплое слово'];
+const CHM=[['Решите, куда сходите вдвоём на этой неделе','Напишите друг другу, что вам нравится в вас обоих'],['Договоритесь о встрече в этом месяце','Скиньте друг другу воспоминание про вас двоих']];
+const pool=r=>CH.concat(CHM[r<2?0:1]);
+const REL=['Девушку','Парня','Подругу','Друга'];
+let R=null,INV=null,VIEW=null,LAST='';const SEL={p:0,rel:0,reg:0};
+const lsg=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+const lss=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+const hue=h=>document.documentElement.style.setProperty('--h',h);
+function show(id){['load','err','setup','lobby','join','game'].forEach(x=>$(x).hidden=x!==id);scrollTo(0,0)}
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2600)}
+function fx(c){const e=$('fx');e.className='fx';void e.offsetWidth;e.className='fx go '+c}
+async function api(n,b,quiet){
+ try{const r=await fetch(API_URL+'/api/'+n,{method:'POST',headers:{'Content-Type':'application/json','X-Init':tg?tg.initData:''},body:JSON.stringify(b||{})});
+  const j=await r.json();if(j&&j.bot)BOT=j.bot;if(!r.ok||j.error){if(!quiet)toast(j.error||'Ошибка связи');return null}return j}
+ catch(e){if(!quiet)toast('Нет связи с сервером');return null}}
+const cur=()=>{let k=0;TH.forEach((t,i)=>{if(R.streak>=t)k=i});return k};
+const sn=i=>i<8?BASE[i]:P[R.plant].t[i-8];
+const link=()=>'https://t.me/'+BOT+'?start=join_'+R.code;
+const share=(url,text)=>{const u='https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text);tg.openTelegramLink?tg.openTelegramLink(u):window.open(u)};
+function hourIn(tz){try{const p=new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());const g=t=>+p.find(x=>x.type===t).value;return g('hour')+g('minute')/60}catch(e){const d=new Date();return d.getHours()+d.getMinutes()/60}}
+const fmt=h=>String(Math.floor(h)).padStart(2,'0')+':'+String(Math.floor(h%1*60)).padStart(2,'0');
+function sky(){
+ const c=REG[R.me.reg],h=hourIn(c[1]),day=h>=6&&h<20,t=day?(h-6)/14:((h-20+24)%24)/10;
+ const o=$('orb');o.className='orb '+(day?'sun':'moon');o.style.left=(8+84*t)+'%';o.style.top=(76-64*Math.sin(Math.PI*t))+'%';
+ const sc=$('scene'),a=h<5||h>=21?['#0d1b3a','#2b3f73']:h<7?['#f4a58a','#fde0c2']:h>=18?['#e98a86','#f9d6b0']:null;
+ sc.classList.toggle('night',h<5.5||h>=20.5);
+ ['--sky1','--sky2'].forEach((v,i)=>a?sc.style.setProperty(v,a[i]):sc.style.removeProperty(v));
+ const pc=REG[R.p.reg];
+ $('clock').textContent='Ты · '+c[0]+' '+fmt(h)+' · '+R.p.name+' · '+pc[0]+' '+fmt(hourIn(pc[1]))}
+function fillReg(el,val,cb){REG.forEach((r,k)=>el.add(new Option(r[0],k)));el.value=val;el.onchange=()=>cb(+el.value)}
+function picker(){const b=$('plants');b.innerHTML='';
+ P.forEach((p,i)=>{const e=document.createElement('button');e.className='plant'+(i===SEL.p?' on':'');
+  e.innerHTML=art(p.k,11)+'<b></b>';e.querySelector('b').textContent=p.n;
+  e.onclick=()=>{SEL.p=i;hue(p.h);picker()};b.append(e)})}
+function relDraw(){const r=$('rel');r.innerHTML='';REL.forEach((t,i)=>{const b=document.createElement('button');b.className='opt'+(i===SEL.rel?' on':'');b.dataset.i=i;b.textContent=t;r.append(b)})}
+function route(){
+ if(R){hue(P[R.plant].h);R.started?game():lobby()}
+ else if(INV){show('join');hue(P[INV.plant].h);$('jT').textContent=INV.from+' зовёт растить '+P[INV.plant].a}
+ else{show('setup');hue(P[SEL.p].h)}}
+function upd(j){R=j.room;INV=j.invite||null;LAST=JSON.stringify(R);route()}
+function lobby(){show('lobby');$('code').textContent=R.code;$('lnk').textContent=link();
+ $('lbLead').textContent='Отправь приглашение, и вы начнёте растить '+P[R.plant].a+'.';
+ $('sn0').textContent=R.me.name;$('av0').textContent=Array.from(R.me.name)[0].toUpperCase()}
+function game(){show('game');render()}
+function render(){
+ const p=P[R.plant],c=cur(),v=VIEW!==null?VIEW:c,nx=TH[c+1],pv=v!==c,me=R.me,pa=R.p;
+ $('title').textContent=me.name+' и '+pa.name;
+ $('mode').textContent=(R.rel<2?'Пара':'Друзья')+' · растём вместе';
+ $('streak').textContent='Серия '+R.streak+' дн.';
+ const a=$('art');a.innerHTML=art(p.k,v);a.classList.toggle('dead',!R.alive&&!pv);
+ $('stage').textContent=pv?sn(v):R.alive?sn(c):'Растение завяло';
+ $('sub').textContent=pv?(TH[v]?'Так было на '+TH[v]+'-й день':'Так всё начиналось'):R.alive?'Сегодня '+R.streak+'-й день вместе':'Серия остановилась на '+R.streak+' дн.';
+ $('fill').style.width=(nx?Math.round((R.streak-TH[c])/(nx-TH[c])*100):100)+'%';
+ $('next').textContent=R.alive?(nx?'До этапа «'+sn(c+1)+'»: '+(nx-R.streak)+' дн.':'Вы вырастили всё, что можно'):'';
+ $('curBtn').hidden=!pv;$('live').hidden=!R.alive;$('gone').hidden=R.alive;
+ [[me,'m0',me.role],[pa,'m1',me.role==='w'?'f':'w']].forEach(([m,id,role])=>{const e=$(id);
+  e.querySelector('.av').textContent=Array.from(m.name)[0].toUpperCase();
+  e.querySelector('b').textContent=m.name;
+  e.querySelector('.mut').textContent=role==='w'?'поливает':'удобряет';
+  e.querySelector('.ck').textContent=m.done?'✓':'';e.querySelector('.ck').classList.toggle('on',m.done)});
+ $('act').textContent=me.done?'Готово на сегодня':(me.role==='w'?'Полить':'Удобрить');$('act').disabled=me.done;
+ $('nudge').hidden=pa.done;$('nudge').textContent='Подтолкнуть: '+pa.name;
+ const n=R.note;$('noteIn').hidden=!n;$('pin').hidden=!n;
+ if(n){$('noteFrom').textContent='Записка от '+n.from;$('noteTxt').textContent=n.text}
+ $('noteLbl').textContent='Записка для '+pa.name;
+ const ps=pool(R.rel);$('chH').textContent='Вызов дня · звёзд в копилке: '+R.stars;$('chT').textContent=ps[R.ch%ps.length];
+ $('chS').textContent=me.name+(me.chd?' ✓':' …')+'    '+pa.name+(pa.chd?' ✓':' …');
+ $('chDo').textContent=me.chd?'Готово ✓':'Я выполнил(а)';$('chDo').disabled=me.chd;
+ $('rev').textContent=R.revLeft>0?'Вернуть бесплатно (осталось '+R.revLeft+' из '+R.revMax+' в этом месяце)':'Лимит восстановлений исчерпан';$('rev').disabled=R.revLeft<1;
+ $('revN').textContent=R.revLeft>0?'Серия сохранится.':'Новые бесплатные восстановления появятся в начале следующего месяца. Пока можно посадить заново: серия обнулится.';
+ $('rgG').value=me.reg;
+ let h='';
+ TH.forEach((t,i)=>{const cl=i<c?'done':i===c?'now':'lock';
+  h+=`<button class="row ${cl}" data-i="${i}" ${i>c?'disabled':''}><span class="th">${art(p.k,i)}</span><span class="tx"><b>${i?'День '+t:'Посадка'}</b><span>${sn(i)}</span></span><span class="tag">${i<c?'пройдено':i===c?'сейчас':'через '+(t-R.streak)+' дн.'}</span></button>`});
+ $('tl').innerHTML=h;
+ const ms=[10,30,100].includes(R.streak)&&lsg('ms'+R.code)!==String(R.streak);
+ $('post').hidden=!ms;if(ms){$('postArt').innerHTML=art(p.k,c);$('postT').textContent=me.name+' и '+pa.name+' растят '+p.a+' уже '+R.streak+' дней'}
+ sky()}
+
+$('rel').onclick=e=>{const b=e.target.closest('button');if(!b)return;SEL.rel=+b.dataset.i;relDraw()};
+$('go').onclick=async()=>{const j=await api('create',SEL);if(j)upd(j)};
+$('jGo').onclick=async()=>{const j=await api('join',{code:INV.code,reg:SEL.reg});if(j)upd(j)};
+$('share').onclick=()=>share(link(),R.me.name+' зовёт тебя растить '+P[R.plant].a+' вместе');
+$('copy').onclick=()=>{try{navigator.clipboard.writeText(link()).then(()=>toast('Ссылка скопирована'),()=>toast('Выдели и скопируй ссылку вручную'))}catch(e){toast('Выдели и скопируй ссылку вручную')}};
+const ask=(t,f)=>tg&&tg.showConfirm?tg.showConfirm(t,ok=>{if(ok)f()}):f();
+const closeRoom=()=>ask('Закрыть комнату для обоих? Серия пропадёт.',async()=>{const j=await api('leave');if(j){VIEW=null;upd(j)}});
+$('close0').onclick=closeRoom;$('leave').onclick=closeRoom;
+$('act').onclick=async()=>{fx(R.me.role==='w'?'water':'gold');const j=await api('act');
+ if(j){upd(j);const e=$('art');e.classList.remove('pop');void e.offsetWidth;e.classList.add('pop');toast(R.p.done&&R.me.done?'Оба на месте. Растение растёт':'Ждём: '+R.p.name)}};
+$('nudge').onclick=async()=>{const j=await api('nudge');if(j){upd(j);toast('Напоминание отправлено')}};
+$('noteSend').onclick=async()=>{const i=$('noteOut'),t=i.value.trim();if(!t)return toast('Напиши пару слов');const j=await api('note',{text:t});if(j){i.value='';upd(j);toast('Записка отправлена')}};
+$('noteOk').onclick=async()=>{const j=await api('noteread');if(j)upd(j)};
+$('pin').onclick=()=>$('noteIn').scrollIntoView({behavior:'smooth',block:'center'});
+$('chDo').onclick=async()=>{const j=await api('chal',{action:'done'});if(j){upd(j);if(R.me.chd&&R.p.chd)toast('Вызов выполнен: +1 звезда')}};
+$('chNew').onclick=async()=>{const j=await api('chal',{action:'next'});if(j)upd(j)};
+$('rev').onclick=async()=>{const j=await api('revive');if(j){VIEW=null;upd(j);toast('Растение ожило')}};
+$('restart').onclick=()=>ask('Серия обнулится. Посадить заново?',async()=>{const j=await api('restart');if(j){VIEW=null;upd(j)}});
+$('tl').onclick=e=>{const r=e.target.closest('.row');if(!r||r.disabled)return;const i=+r.dataset.i;VIEW=i===cur()?null:i;render();$('scene').scrollIntoView({behavior:'smooth',block:'center'})};
+$('curBtn').onclick=()=>{VIEW=null;render()};
+$('pClose').onclick=()=>{lss('ms'+R.code,String(R.streak));$('post').hidden=true};
+$('pShare').onclick=()=>share('https://t.me/'+BOT,$('postT').textContent);
+$('retry').onclick=()=>{show('load');boot()};
+async function boot(){
+ if(API_URL.includes('ВАШ-СЕРВЕР')){$('errT').textContent='В файле index.html не указан адрес сервера: поменяй API_URL в начале скрипта.';show('err');return}
+ if(!tg||!tg.initData){$('errT').textContent='Открой приложение внутри Telegram: напиши боту /start и нажми кнопку «Открыть сад».';show('err');return}
+ tg.ready();tg.expand();document.documentElement.dataset.theme=tg.colorScheme||'light';
+ const q=new URLSearchParams(location.search).get('join')||(tg.initDataUnsafe&&tg.initDataUnsafe.start_param)||'';
+ const j=await api('state',{join:q},true);
+ if(!j){$('errT').textContent='Не удалось связаться с сервером. Проверь интернет и повтори.';show('err');return}
+ upd(j)}
+setInterval(async()=>{if(document.hidden||!R)return;const j=await api('state',{},true);if(!j)return;
+ if(JSON.stringify(j.room)===LAST)return;if(!j.room)toast('Комнату закрыли');upd(j)},5000);
+let DEF=0;try{const k=REG.findIndex(r=>r[1]===Intl.DateTimeFormat().resolvedOptions().timeZone);if(k>=0)DEF=k}catch(e){}
+SEL.reg=DEF;
+fillReg($('rgS'),DEF,v=>SEL.reg=v);fillReg($('rgJ'),DEF,v=>SEL.reg=v);
+fillReg($('rgG'),DEF,async v=>{const j=await api('setreg',{reg:v});if(j)upd(j)});
+picker();relDraw();boot();
+</script></body></html>
